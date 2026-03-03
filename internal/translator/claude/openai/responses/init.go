@@ -7,6 +7,7 @@ import (
 )
 
 func init() {
+	// Register openai-response -> claude translator
 	translator.Register(
 		OpenaiResponse,
 		Claude,
@@ -14,6 +15,17 @@ func init() {
 		interfaces.TranslateResponse{
 			Stream:    ConvertClaudeResponseToOpenAIResponses,
 			NonStream: ConvertClaudeResponseToOpenAIResponsesNonStream,
+		},
+	)
+
+	// Register claude -> openai-response translator (needed for Codex models)
+	translator.Register(
+		Claude,
+		OpenaiResponse,
+		ConvertClaudeRequestToOpenAIResponses,
+		interfaces.TranslateResponse{
+			Stream:    ConvertOpenAIResponsesToClaude,
+			NonStream: ConvertOpenAIResponsesToClaudeNonStream,
 		},
 	)
 }
